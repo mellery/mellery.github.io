@@ -15,5 +15,10 @@ gh api repos/mellery/mellery.github.io/pages \
 
 echo
 echo "== live =="
-printf 'https://footloose.info      -> '; curl -so /dev/null -w '%{http_code}\n' --max-time 10 https://footloose.info/
-printf 'https://www.footloose.info  -> '; curl -so /dev/null -w '%{http_code}\n' --max-time 10 https://www.footloose.info/
+for url in http://footloose.info/ https://footloose.info/ \
+           http://www.footloose.info/ https://www.footloose.info/; do
+  code=$(curl -sIo /dev/null -w '%{http_code}' --max-time 10 "$url" 2>/dev/null)
+  [[ "$code" == "000" ]] && code="unreachable"
+  printf '%-30s %s\n' "$url" "$code"
+done
+exit 0
